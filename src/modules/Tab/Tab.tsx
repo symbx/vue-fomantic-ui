@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { computed, defineComponent, ref, watch } from "vue";
-import { computeKeyOnly } from "../../utils/classNameHelper";
+import { computeKeyOnly, computeKeyValue } from "../../utils/classNameHelper";
 import TabPanel from "./TabPanel";
 
 export default defineComponent({
@@ -10,7 +10,8 @@ export default defineComponent({
     activeIndex: { type: Number, default: 0 },
     pointing: Boolean,
     secondary: Boolean,
-    text: Boolean
+    text: Boolean,
+    widths: String
   },
   setup(props, { emit, slots }) {
     const tabIndex = ref(props.activeIndex)
@@ -51,6 +52,7 @@ export default defineComponent({
     const tabMenuClass = computed(() => {
       return clsx(
         'ui menu',
+        computeKeyValue(props.widths, 'item'),
         computeKeyOnly(isDefaultMenu.value, 'tabular attached'),
         computeKeyOnly(props.pointing, 'pointing'),
         computeKeyOnly(props.secondary, 'secondary'),
