@@ -10,7 +10,8 @@ export default defineComponent({
     modelValue: Boolean,
     size: String,
     closable: { type: Boolean, default: true },
-    topMost: { type: Boolean, default: false }
+    topMost: { type: Boolean, default: false },
+    inverted: Boolean
   },
   setup (props, { emit }) {
     const visualState = ref(props.modelValue ? 'open' : 'closed')
@@ -80,6 +81,7 @@ export default defineComponent({
         'ui',
         props.size,
         computeKeyOnly(props.basic, 'basic'),
+        computeKeyOnly(props.inverted, 'inverted'),
         'modal',
         'transition',
         computeAnimationClass(visualState.value)
