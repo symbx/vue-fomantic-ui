@@ -13,7 +13,8 @@ export default defineComponent({
     readOnly: Boolean,
     slider: Boolean,
     toggle: Boolean,
-    value: null
+    value: null,
+    inverted: Boolean
   },
   setup(props, { emit }) {
     const computedClass = computed(() => {
@@ -23,6 +24,7 @@ export default defineComponent({
         computeKeyOnly(props.disabled, 'disabled'),
         computeKeyOnly(props.indeterminate, 'indeterminate'),
         computeKeyOnly(props.readOnly, 'read-only'),
+        computeKeyOnly(props.inverted, 'inverted'),
         computeKeyOnly(props.slider, 'slider'),
         computeKeyOnly(props.toggle, 'toggle'),
         'checkbox'
