@@ -30,7 +30,7 @@ export default defineComponent({
 
     const onClick = () => {
       if (!state.multiple) hide()
-      emit('select', props.item ? props.item : props.text)
+      emit('select', props.item ? (typeof props.item === 'object' ? props.item.value : props.item) : props.text)
     }
 
     return {

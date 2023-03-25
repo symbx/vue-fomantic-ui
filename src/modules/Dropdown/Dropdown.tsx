@@ -107,6 +107,10 @@ export default defineComponent({
     const onSelect = (event: any) => {
       filteredText.value = ''
 
+      if (typeof event !== 'string') {
+        event = event.value
+      }
+
       if (props.multiple) {
         let result = Array.isArray(props.modelValue) ? [...props.modelValue, event] : [event]
         return emit('update:modelValue', result)
@@ -181,7 +185,7 @@ export default defineComponent({
         .map((option: TDropdownItem | string) => {
           return <DropdownItem
             item={option}
-            active={this.$props.modelValue && typeof option === 'object' ? option.text === (this.$props.modelValue as TDropdownItem).text : option === this.$props.modelValue}
+            active={this.$props.modelValue && typeof option === 'object' ? option.value === this.$props.modelValue : option === this.$props.modelValue}
             text={typeof option === 'object' ? option.text : option}
             flag={typeof option === 'object'
               ? Object.keys(option as any).includes('flag') ? option.flag : ''
@@ -198,7 +202,7 @@ export default defineComponent({
         clearable: this.clearable,
         filtered: this.filteredText.length > 0,
         icon: this.icon,
-        item: this.modelValue,
+        item: (this.$props.options as (string|TDropdownItem)[])?.find((o: any) => typeof o === 'object' ? o.value === this.modelValue : o === this.modelValue) || this.modelValue,
         placeholder: this.placeholder,
         text: this.text
       }
