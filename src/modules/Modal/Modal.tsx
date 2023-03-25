@@ -8,7 +8,8 @@ export default defineComponent({
     basic: Boolean,
     closeIcon: Boolean,
     modelValue: Boolean,
-    size: String
+    size: String,
+    closable: { type: Boolean, default: true }
   },
   setup (props, { emit }) {
     const visualState = ref(props.modelValue ? 'open' : 'closed')
@@ -77,7 +78,9 @@ export default defineComponent({
     })
 
     const close = () => {
-      emit('update:modelValue', false)
+      if (props.closable) {
+        emit('update:modelValue', false)
+      }
     }
 
     return {
