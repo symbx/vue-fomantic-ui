@@ -11,7 +11,8 @@ export default defineComponent({
     pointing: Boolean,
     secondary: Boolean,
     text: Boolean,
-    widths: String
+    widths: String,
+    inverted: Boolean
   },
   setup(props, { emit, slots }) {
     const tabIndex = ref(props.activeIndex)
@@ -54,6 +55,7 @@ export default defineComponent({
         'ui menu',
         computeKeyValue(props.widths, 'item'),
         computeKeyOnly(isDefaultMenu.value, 'tabular attached'),
+        computeKeyOnly(props.inverted, 'inverted'),
         computeKeyOnly(props.pointing, 'pointing'),
         computeKeyOnly(props.secondary, 'secondary'),
         computeKeyOnly(props.text, 'text')
@@ -89,6 +91,7 @@ export default defineComponent({
           {...tab.props}
           active={this.tabIndex === i}
           attached={this.isDefaultMenu ? 'bottom' : false}
+          inverted={this.inverted}
         >
           {tab.children.default?.()}
         </TabPanel>
