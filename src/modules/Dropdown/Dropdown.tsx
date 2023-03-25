@@ -44,6 +44,7 @@ export default defineComponent({
     searchInMenu: Boolean,
     simple: Boolean,
     text: String,
+    inverted: Boolean
   },
   setup(props, { emit }) {
     const api = useDropdown(props)
@@ -72,6 +73,7 @@ export default defineComponent({
         computeKeyOnly(props.selection, 'selection'),
         computeKeyOnly(props.search, 'search'),
         computeKeyOnly(props.simple, 'simple'),
+        computeKeyOnly(props.inverted, 'inverted'),
         computeKeyOrKeyValue(props.pointing, 'pointing'),
         'dropdown',
         computeKeyOnly(state.visible, 'active visible'),
