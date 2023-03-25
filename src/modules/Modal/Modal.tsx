@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { computed, defineComponent, onMounted, onUnmounted, ref, Teleport, watch } from 'vue'
+import { computed, CSSProperties, defineComponent, onMounted, onUnmounted, ref, Teleport, watch } from 'vue'
 import { computeKeyOnly } from '../../utils/classNameHelper'
 
 export default defineComponent({
@@ -9,7 +9,8 @@ export default defineComponent({
     closeIcon: Boolean,
     modelValue: Boolean,
     size: String,
-    closable: { type: Boolean, default: true }
+    closable: { type: Boolean, default: true },
+    topMost: { type: Boolean, default: false }
   },
   setup (props, { emit }) {
     const visualState = ref(props.modelValue ? 'open' : 'closed')
@@ -53,17 +54,25 @@ export default defineComponent({
     })
 
     const dimmerStyle = computed(() => {
-      return {
+      const style: CSSProperties = {
         display: isVisible.value ? 'flex !important' : 'none !important',
         animationDuration: '500ms'
       }
+      if (props.topMost) {
+        style.zIndex = 1002
+      }
+      return style
     })
 
     const modalStyle = computed(() => {
-      return {
+      const style: CSSProperties = {
         display: isVisible.value ? 'block !important' : 'none !important',
         animationDuration: '500ms'
       }
+      if (props.topMost) {
+        style.zIndex = 1003
+      }
+      return style
     })
 
     const computedClass = computed(() => {
