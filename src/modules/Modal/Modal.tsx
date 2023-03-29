@@ -11,7 +11,8 @@ export default defineComponent({
     size: String,
     closable: { type: Boolean, default: true },
     topMost: { type: Boolean, default: false },
-    inverted: Boolean
+    inverted: Boolean,
+    invertedDimmer: Boolean
   },
   setup (props, { emit }) {
     const visualState = ref(props.modelValue ? 'open' : 'closed')
@@ -49,7 +50,9 @@ export default defineComponent({
     const dimmerClass = computed(() => {
       return clsx(
         'ui',
-        'page modals dimmer transition',
+        'page modals',
+        computeKeyOnly(props.invertedDimmer, 'inverted'),
+        'dimmer transition',
         computeAnimationClass(visualState.value, 'fade')
       )
     })
