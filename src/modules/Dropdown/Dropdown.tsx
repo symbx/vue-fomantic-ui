@@ -94,12 +94,15 @@ export default defineComponent({
     const filteredText = ref('')
     const filteredOptions = computed(() => {
       return (props.options as (string|TDropdownItem)[]).filter((option) => {
-        if (typeof option === 'string') return option.toLowerCase().includes(filteredText.value.toLowerCase())
+        if (typeof option === 'string') {
+          return option.toLowerCase().includes(filteredText.value.toLowerCase())
+        }
         if (props.multiple && Array.isArray(props.modelValue)) {
-          if (typeof option === 'object') return !pluck(props.modelValue, 'text').includes(option.text)
+          if (typeof option === 'object') {
+            return !props.modelValue.includes(option.value)
+          }
           return props.modelValue.includes(option)
         }
-
         return option.text.toLowerCase().includes(filteredText.value.toLowerCase())
       })
     })
@@ -109,7 +112,7 @@ export default defineComponent({
     const onSelect = (event: any) => {
       filteredText.value = ''
 
-      if (typeof event !== 'string') {
+      if (typeof event === 'object') {
         event = event.value
       }
 
@@ -120,7 +123,7 @@ export default defineComponent({
 
       return emit('update:modelValue', event)
     }
-    const removeItem = (value: string) => {
+    const removeItem = (value: string | number | undefined) => {
       if (Array.isArray(props.modelValue)) {
         const index = props.modelValue.findIndex((selected) => selected === value)
 
@@ -132,6 +135,14 @@ export default defineComponent({
         }
       } 
     }
+
+    const selected = computed(() => {
+      if (!Array.isArray(props.modelValue) || props.modelValue.length === 0) {
+        return []
+      }
+      return (props.options as (string|TDropdownItem)[]).filter((o) => 
+        props.modelValue?.includes(typeof o === 'object' ? o.value : o))
+    })
 
     provide('selection', props.selection)
 
@@ -145,21 +156,22 @@ export default defineComponent({
       inputRef,
       onInput,
       onSelect,
-      removeItem
+      removeItem,
+      selected
     }
   },
   render() {
     const renderMultipleSelect = () => {
       if (Array.isArray(this.$props.modelValue)) {
         return (
-          this.$props.modelValue.map((selected) => {
+          this.selected.map((selected) => {
             if (typeof selected === 'object') {
               return <a class="ui label">
                 {selected.flag && <i class={`${selected.flag} flag`}></i>}
                 {selected.text}
                 <i
                   class="delete icon"
-                  onClick={withModifiers(() => this.removeItem(selected), ["stop"])}
+                  onClick={withModifiers(() => this.removeItem(selected.value), ["stop"])}
                 ></i>
               </a>
             }
