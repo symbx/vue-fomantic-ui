@@ -33,7 +33,7 @@ export default defineComponent({
     inline: Boolean,
     item: Boolean,
     labeled: Boolean,
-    modelValue: [Object, String],
+    modelValue: Object as PropType<String|Number|String[]|Number[]>,
     multiple: Boolean,
     options: Array as PropType<TDropdownItem[]|string[]>,
     placeholder: String,
@@ -99,7 +99,7 @@ export default defineComponent({
         }
         if (props.multiple && Array.isArray(props.modelValue)) {
           if (typeof option === 'object') {
-            return !props.modelValue.includes(option.value)
+            return !props.modelValue.includes(option.value as any)
           }
           return props.modelValue.includes(option)
         }
@@ -140,8 +140,8 @@ export default defineComponent({
       if (!Array.isArray(props.modelValue) || props.modelValue.length === 0) {
         return []
       }
-      return (props.options as (string|TDropdownItem)[]).filter((o) => 
-        props.modelValue?.includes(typeof o === 'object' ? o.value : o))
+      return (props.options as (string|TDropdownItem)[]).filter((o: any) => 
+        (props.modelValue as (string|number)[]).includes(typeof o === 'object' ? o.value : o))
     })
 
     provide('selection', props.selection)
@@ -192,7 +192,7 @@ export default defineComponent({
       return this.filteredOptions
         .filter((option) => {
           if (this.$props.multiple && Array.isArray(this.$props.modelValue)) {
-            return !this.$props.modelValue.includes(option)
+            return !this.$props.modelValue.includes((typeof option === 'object' ? option.value : option) as any)
           }
           return true
         })
