@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { computed, defineComponent, h } from "vue";
-import { computeKeyOnly } from "../../utils/classNameHelper";
+import { computeKeyOnly, computeKeyValue } from "../../utils/classNameHelper";
 
 export default defineComponent({
   name: 'SuiFormField',
@@ -11,6 +11,7 @@ export default defineComponent({
     placeholder: String,
     required: Boolean,
     type: String,
+    wide: String
   },
   setup(props) {
     const computedClass = computed(() => {
@@ -18,6 +19,7 @@ export default defineComponent({
         computeKeyOnly(props.error, 'error'),
         computeKeyOnly(props.inline, 'inline'),
         computeKeyOnly(props.required, 'required'),
+        computeKeyValue(props.wide, 'wide'),
         'field'
       )
     })
