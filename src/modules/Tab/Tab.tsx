@@ -75,7 +75,7 @@ export default defineComponent({
     const renderMenuItems = () => {
       return this.tabs.map((tab: any, i: number) => {
         return <a
-          class={`item ${this.tabIndex === i && 'active'}`}
+          class={`item ${this.tabIndex === i && 'active'} ${tab.props.disabled && 'disabled'}`}
           onClick={(event) => this.onClick(event, i)}
           onKeydown={(event) => this.onKeyDown(event, i)}
           tabindex={0}

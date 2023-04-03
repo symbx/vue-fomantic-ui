@@ -8,7 +8,8 @@ export default defineComponent({
     active: Boolean,
     attached: [Boolean, String],
     header: String,
-    inverted: Boolean
+    inverted: Boolean,
+    disabled: Boolean
   },
   setup(props) {
     const computedClass = computed(() => {
