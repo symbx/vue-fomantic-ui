@@ -13,7 +13,7 @@ export default defineComponent({
     description: String,
     icon: String,
     image: Object,
-    item: [Object, String],
+    item: [Object, String, Number],
     label: Object,
     text: String,
     onSelect: Function as PropType<(event: InputEvent) => void>

@@ -19,6 +19,8 @@ interface TDropdownItem {
   }
 }
 
+type DropdownValue = string|number|string[]|number[];
+
 export default defineComponent({
   name: 'SuiDropdown',
   directives: { clickoutside: clickOutside },
@@ -33,7 +35,7 @@ export default defineComponent({
     inline: Boolean,
     item: Boolean,
     labeled: Boolean,
-    modelValue: Object as PropType<String|Number|String[]|Number[]>,
+    modelValue: [String, Number, Array] as PropType<DropdownValue>,
     multiple: Boolean,
     options: Array as PropType<TDropdownItem[]|string[]>,
     placeholder: String,
@@ -99,7 +101,7 @@ export default defineComponent({
         }
         if (props.multiple && Array.isArray(props.modelValue)) {
           if (typeof option === 'object') {
-            return !props.modelValue.includes(option.value as any)
+            return !(props.modelValue as DropdownValue[]).includes(option.value as DropdownValue)
           }
           return props.modelValue.includes(option)
         }
@@ -192,7 +194,7 @@ export default defineComponent({
       return this.filteredOptions
         .filter((option) => {
           if (this.$props.multiple && Array.isArray(this.$props.modelValue)) {
-            return !this.$props.modelValue.includes((typeof option === 'object' ? option.value : option) as any)
+            return !(this.$props.modelValue as DropdownValue[]).includes((typeof option === 'object' ? option.value : option) as DropdownValue)
           }
           return true
         })

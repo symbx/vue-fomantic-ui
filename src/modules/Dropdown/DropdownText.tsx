@@ -18,7 +18,7 @@ export default defineComponent({
     clearable: Boolean,
     filtered: Boolean,
     icon: { type: String, default: 'dropdown' },
-    item: [Object, String],
+    item: [Object, String, Number],
     placeholder: String,
     text: String,
     onRemove: Function
