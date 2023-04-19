@@ -24,7 +24,22 @@ export default defineComponent({
     placeholder: String,
     size: String,
     transparent: Boolean,
-    type: String
+    type: String,
+    min: {
+      type: Number,
+      required: false,
+      default: null
+    },
+    max: {
+      type: Number,
+      required: false,
+      default: null
+    },
+    step: {
+      type: Number,
+      required: false,
+      default: null
+    }
   },
   setup (props, { emit }) {
     const hasIcon = computed(() => {
@@ -64,6 +79,9 @@ export default defineComponent({
           placeholder={props.placeholder}
           value={props.modelValue}
           onInput={(event) => onInput(event)}
+          min={props.min}
+          max={props.max}
+          step={props.step}
         />
         {hasIcon.value && <Icon name={(props.icon || 'spinner')} />}
         {props.action && <Button>{props.action}</Button>}
