@@ -39,6 +39,31 @@ export default defineComponent({
       type: Number,
       required: false,
       default: null
+    },
+    maxLength: {
+      type: Number,
+      required: false,
+      default: null
+    },
+    minLength: {
+      type: Number,
+      required: false,
+      default: null
+    },
+    readOnly: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    required: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    autocomplete: {
+      type: String,
+      required: false,
+      default: null
     }
   },
   setup (props, { emit }) {
@@ -82,6 +107,11 @@ export default defineComponent({
           min={props.min}
           max={props.max}
           step={props.step}
+          maxlength={props.maxLength}
+          minlength={props.minLength}
+          readonly={props.readOnly}
+          required={props.required}
+          autocomplete={props.autocomplete}
         />
         {hasIcon.value && <Icon name={(props.icon || 'spinner')} />}
         {props.action && <Button>{props.action}</Button>}
