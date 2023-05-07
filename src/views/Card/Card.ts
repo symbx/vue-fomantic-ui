@@ -11,7 +11,8 @@ export default defineComponent({
     horizontal: Boolean,
     href: String,
     link: Boolean,
-    raised: Boolean
+    raised: Boolean,
+    loading: Boolean,
   },
   setup(props) {
     const computedClass = computed(() => {
@@ -23,6 +24,7 @@ export default defineComponent({
         computeKeyOnly(props.horizontal, 'horizontal'),
         computeKeyOnly(props.link, 'link'),
         computeKeyOnly(props.raised, 'raised'),
+        computeKeyOnly(props.loading, 'loading'),
         'card'
       )
     })
