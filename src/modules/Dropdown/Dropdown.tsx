@@ -11,6 +11,7 @@ interface TDropdownItem {
   text: string,
   value?: string | number,
   flag?: string,
+  icon?: string,
   image?: {},
   label?: {
     color?: string,
@@ -208,6 +209,7 @@ export default defineComponent({
               : ''}
             image={(option as TDropdownItem).image}
             label={(option as TDropdownItem).label}
+            icon={(option as TDropdownItem).icon}
             onSelect={this.onSelect}
           />
       })
