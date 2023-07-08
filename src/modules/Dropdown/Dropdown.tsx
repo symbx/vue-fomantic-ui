@@ -47,7 +47,8 @@ export default defineComponent({
     searchInMenu: Boolean,
     simple: Boolean,
     text: String,
-    inverted: Boolean
+    inverted: Boolean,
+    preserveFilter: Boolean
   },
   setup(props, { emit }) {
     const api = useDropdown(props)
@@ -125,7 +126,9 @@ export default defineComponent({
       }
     }
     const onSelect = (event: any) => {
-      filteredText.value = ''
+      if (!props.preserveFilter) {
+        filteredText.value = ''
+      }
 
       if (typeof event === 'object') {
         event = event.value
