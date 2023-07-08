@@ -97,12 +97,14 @@ export default defineComponent({
     const filteredText = ref('')
     const filteredOptions = computed(() => {
       return (props.options as (string|TDropdownItem)[]).filter((option) => {
+        const query = filteredText.value.toLowerCase();
         if (typeof option === 'string') {
-          return option.toLowerCase().includes(filteredText.value.toLowerCase())
+          return option.toLowerCase().includes(query)
         }
         if (props.multiple && Array.isArray(props.modelValue)) {
           if (typeof option === 'object') {
-            return !(props.modelValue as DropdownValue[]).includes(option.value as DropdownValue)
+            return !(props.modelValue as DropdownValue[]).includes(option.value as DropdownValue) &&
+                    option.text.toLowerCase().includes(query)
           }
           return props.modelValue.includes(option)
         }
