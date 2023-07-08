@@ -116,6 +116,7 @@ export default defineComponent({
 
     const inputRef: Ref<HTMLElement|null> = ref(null)
     const sizerRef: Ref<HTMLElement|null> = ref(null)
+    const baseRef: Ref<HTMLElement|null> = ref(null)
     const searchWidth: Ref<number> = ref(42);
     const onInput = (event: InputEvent) => {
       filteredText.value = (event.target as HTMLInputElement).value
@@ -158,6 +159,19 @@ export default defineComponent({
         (props.modelValue as (string|number)[]).includes(typeof o === 'object' ? o.value : o))
     })
 
+    const searchLostFocus = (event: any) => {
+      let el = event.relatedTarget || event.explicitOriginalTarget
+      if (el !== null) {
+        while (el.tagName.toLowerCase() !== 'body') {
+          if (el === baseRef.value) {
+            return
+          }
+          el = el.parentElement
+        }
+      }
+      closeMenu();
+    }
+
     provide('selection', props.selection)
 
     return {
@@ -169,11 +183,13 @@ export default defineComponent({
       filteredOptions,
       inputRef,
       sizerRef,
+      baseRef,
       onInput,
       onSelect,
       removeItem,
       selected,
-      searchWidth
+      searchWidth,
+      searchLostFocus
     }
   },
   render() {
@@ -259,6 +275,7 @@ export default defineComponent({
         class={this.computedClass}
         onClick={this.onClick}
         v-clickoutside={this.closeMenu}
+        ref={(ref) => this.baseRef = ref as HTMLElement}
       >
         {this.$props.multiple && renderMultipleSelect()}
         {this.search && <input
@@ -270,6 +287,7 @@ export default defineComponent({
           value={this.filteredText}
           onInput={(event) => this.onInput(event as InputEvent)}
           style={{width: this.searchWidth + 'px'}}
+          onBlur={this.searchLostFocus}
         />}
         {this.search && this.multiple && <span 
           class="sizer" 
