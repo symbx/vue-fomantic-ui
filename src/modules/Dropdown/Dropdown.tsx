@@ -47,7 +47,8 @@ export default defineComponent({
     searchInMenu: Boolean,
     simple: Boolean,
     text: String,
-    inverted: Boolean
+    inverted: Boolean,
+    preserveFilter: Boolean
   },
   setup(props, { emit }) {
     const api = useDropdown(props)
@@ -84,25 +85,29 @@ export default defineComponent({
       )
     })
 
-    const onClick = () => state.visible ? hide() : show()
-
     const openMenu = () => {
-      if (props.search && inputRef.value) inputRef.value.focus() 
+      if (props.search && inputRef.value) {
+        inputRef.value.focus() 
+      }
 
       show()
     }
 
     const closeMenu = () => hide()
 
+    const onClick = () => state.visible ? closeMenu() : openMenu()
+
     const filteredText = ref('')
     const filteredOptions = computed(() => {
       return (props.options as (string|TDropdownItem)[]).filter((option) => {
+        const query = filteredText.value.toLowerCase();
         if (typeof option === 'string') {
-          return option.toLowerCase().includes(filteredText.value.toLowerCase())
+          return option.toLowerCase().includes(query)
         }
         if (props.multiple && Array.isArray(props.modelValue)) {
           if (typeof option === 'object') {
-            return !(props.modelValue as DropdownValue[]).includes(option.value as DropdownValue)
+            return !(props.modelValue as DropdownValue[]).includes(option.value as DropdownValue) &&
+                    option.text.toLowerCase().includes(query)
           }
           return props.modelValue.includes(option)
         }
@@ -111,9 +116,19 @@ export default defineComponent({
     })
 
     const inputRef: Ref<HTMLElement|null> = ref(null)
-    const onInput = (event: InputEvent) => filteredText.value = (event.target as HTMLInputElement).value
+    const sizerRef: Ref<HTMLElement|null> = ref(null)
+    const baseRef: Ref<HTMLElement|null> = ref(null)
+    const searchWidth: Ref<number> = ref(42);
+    const onInput = (event: InputEvent) => {
+      filteredText.value = (event.target as HTMLInputElement).value
+      if (sizerRef.value) {
+        searchWidth.value = Math.max(sizerRef.value.getBoundingClientRect().width, 40)
+      }
+    }
     const onSelect = (event: any) => {
-      filteredText.value = ''
+      if (!props.preserveFilter) {
+        filteredText.value = ''
+      }
 
       if (typeof event === 'object') {
         event = event.value
@@ -147,6 +162,19 @@ export default defineComponent({
         (props.modelValue as (string|number)[]).includes(typeof o === 'object' ? o.value : o))
     })
 
+    const searchLostFocus = (event: any) => {
+      let el = event.relatedTarget || event.explicitOriginalTarget
+      if (el !== null) {
+        while (el.tagName.toLowerCase() !== 'body') {
+          if (el === baseRef.value) {
+            return
+          }
+          el = el.parentElement
+        }
+      }
+      closeMenu();
+    }
+
     provide('selection', props.selection)
 
     return {
@@ -157,10 +185,14 @@ export default defineComponent({
       filteredText,
       filteredOptions,
       inputRef,
+      sizerRef,
+      baseRef,
       onInput,
       onSelect,
       removeItem,
-      selected
+      selected,
+      searchWidth,
+      searchLostFocus
     }
   },
   render() {
@@ -246,6 +278,7 @@ export default defineComponent({
         class={this.computedClass}
         onClick={this.onClick}
         v-clickoutside={this.closeMenu}
+        ref={(ref) => this.baseRef = ref as HTMLElement}
       >
         {this.$props.multiple && renderMultipleSelect()}
         {this.search && <input
@@ -256,8 +289,14 @@ export default defineComponent({
           tabindex={0}
           value={this.filteredText}
           onInput={(event) => this.onInput(event as InputEvent)}
+          style={{width: this.searchWidth + 'px'}}
+          onBlur={this.searchLostFocus}
         />}
-        {this.search && this.multiple && <span class="sizer"></span>}
+        {this.search && this.multiple && <span 
+          class="sizer" 
+          ref={(ref) => this.sizerRef = ref as HTMLElement}
+          style="position: absolute; top: -2000px; left: -2000px; display: block;"
+          >{this.filteredText}</span>}
 
         {renderText()}
         {this.$slots.default?.() || renderMenu()}
