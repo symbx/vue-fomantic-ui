@@ -41,6 +41,7 @@ export default defineComponent({
         computeKeyOnly(props.disabled, 'disabled'),
         computeKeyOnly(props.header, 'header'),
         computeKeyOnly(props.link, 'link'),
+        computeKeyOnly(props.icon, 'icon'),
         computeKeyOrKeyValue(props.fitted, 'fitted'),
         'item'
       )
