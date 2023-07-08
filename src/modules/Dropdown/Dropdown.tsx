@@ -84,15 +84,17 @@ export default defineComponent({
       )
     })
 
-    const onClick = () => state.visible ? hide() : show()
-
     const openMenu = () => {
-      if (props.search && inputRef.value) inputRef.value.focus() 
+      if (props.search && inputRef.value) {
+        inputRef.value.focus() 
+      }
 
       show()
     }
 
     const closeMenu = () => hide()
+
+    const onClick = () => state.visible ? closeMenu() : openMenu()
 
     const filteredText = ref('')
     const filteredOptions = computed(() => {
@@ -113,7 +115,14 @@ export default defineComponent({
     })
 
     const inputRef: Ref<HTMLElement|null> = ref(null)
-    const onInput = (event: InputEvent) => filteredText.value = (event.target as HTMLInputElement).value
+    const sizerRef: Ref<HTMLElement|null> = ref(null)
+    const searchWidth: Ref<number> = ref(42);
+    const onInput = (event: InputEvent) => {
+      filteredText.value = (event.target as HTMLInputElement).value
+      if (sizerRef.value) {
+        searchWidth.value = Math.max(sizerRef.value.getBoundingClientRect().width, 40)
+      }
+    }
     const onSelect = (event: any) => {
       filteredText.value = ''
 
@@ -159,10 +168,12 @@ export default defineComponent({
       filteredText,
       filteredOptions,
       inputRef,
+      sizerRef,
       onInput,
       onSelect,
       removeItem,
-      selected
+      selected,
+      searchWidth
     }
   },
   render() {
@@ -258,8 +269,13 @@ export default defineComponent({
           tabindex={0}
           value={this.filteredText}
           onInput={(event) => this.onInput(event as InputEvent)}
+          style={{width: this.searchWidth + 'px'}}
         />}
-        {this.search && this.multiple && <span class="sizer"></span>}
+        {this.search && this.multiple && <span 
+          class="sizer" 
+          ref={(ref) => this.sizerRef = ref as HTMLElement}
+          style="position: absolute; top: -2000px; left: -2000px; display: block;"
+          >{this.filteredText}</span>}
 
         {renderText()}
         {this.$slots.default?.() || renderMenu()}
