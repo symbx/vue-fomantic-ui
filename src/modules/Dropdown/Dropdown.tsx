@@ -118,11 +118,11 @@ export default defineComponent({
     const inputRef: Ref<HTMLElement|null> = ref(null)
     const sizerRef: Ref<HTMLElement|null> = ref(null)
     const baseRef: Ref<HTMLElement|null> = ref(null)
-    const searchWidth: Ref<number> = ref(42);
+    const searchWidth: Ref<number> = ref(0);
     const onInput = (event: InputEvent) => {
       filteredText.value = (event.target as HTMLInputElement).value
       if (sizerRef.value) {
-        searchWidth.value = Math.max(sizerRef.value.getBoundingClientRect().width, 40)
+        searchWidth.value = Math.max(sizerRef.value.getBoundingClientRect().width, 0)
       }
     }
     const onSelect = (event: any) => {
@@ -289,7 +289,7 @@ export default defineComponent({
           tabindex={0}
           value={this.filteredText}
           onInput={(event) => this.onInput(event as InputEvent)}
-          style={{width: this.searchWidth + 'px'}}
+          style={{width: this.searchWidth > 0 ? (this.searchWidth + 'px') : '100%'}}
           onBlur={this.searchLostFocus}
         />}
         {this.search && this.multiple && <span 
