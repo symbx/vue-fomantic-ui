@@ -289,7 +289,7 @@ export default defineComponent({
           tabindex={0}
           value={this.filteredText}
           onInput={(event) => this.onInput(event as InputEvent)}
-          style={{width: this.searchWidth > 0 ? (this.searchWidth + 'px') : '100%'}}
+          style={{width: this.searchWidth > 0 ? (this.searchWidth + 'px') : 'auto'}}
           onBlur={this.searchLostFocus}
         />}
         {this.search && this.multiple && <span 
