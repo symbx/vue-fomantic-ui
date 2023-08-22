@@ -18,6 +18,7 @@ export default defineComponent({
     text: String,
     onSelect: Function as PropType<(event: InputEvent) => void>,
     as: String,
+    disabled: Boolean,
   },
   setup(props, { emit }) {
     const { state, hide } = inject('useDropdown') as any
@@ -31,6 +32,7 @@ export default defineComponent({
     const computedClass = computed(() => {
       return clsx(
         computeKeyOnly(props.active, 'active'),
+        computeKeyOnly(props.disabled, 'disabled'),
         'item'
       )
     })
